@@ -1,0 +1,31 @@
+{
+  "author": [{
+    "email": "opalmer@me.com",
+    "homepage": "https://oscarpalmer.se",
+    "name": "Oscar Palmér",
+    "role": "developer"
+  }],
+  "autoload": {
+    "psr-4": {
+      "oscarpalmer\\Azura\\": "src/",
+      "oscarpalmer\\Azura\\Test\\": "tests/"
+    }
+  },
+  "description": "A framework?",
+  "homepage": "https://github.com/oscarpalmer/azura",
+  "keywords": [
+    "framework",
+    "html",
+    "templating"
+  ],
+  "license": "MIT",
+  "name": "oscarpalmer/azura",
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "phpunit/php-code-coverage": ">=9.2",
+    "phpunit/phpunit": ">=9.5"
+  },
+  "type": "library"
+}
