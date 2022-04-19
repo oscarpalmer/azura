@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace oscarpalmer\Azura;
 
 use stdClass;
+
+mb_internal_encoding('utf-8');
 
 class Template {
     private Azura $azura;
@@ -11,21 +13,25 @@ class Template {
 
     private string $file;
 
-    function __construct(Azura $azura, string $file, mixed $data = null) {
+    function __construct(Azura $azura, string $file, mixed $data = null)
+    {
         $this->azura = $azura;
         $this->data = $data ?? new stdClass;
         $this->file = $file;
     }
 
-    function __toString(): string {
+    function __toString(): string
+    {
         return $this->renderFile();
     }
 
-    public function render(): void {
+    public function render(): void
+    {
         echo($this->renderFile());
     }
 
-    private function renderFile(): string {
+    private function renderFile(): string
+    {
         ob_start();
 
         include($this->file);
