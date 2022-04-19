@@ -4,21 +4,40 @@ namespace oscarpalmer\Azura;
 
 use LogicException;
 
-mb_internal_encoding('utf-8');
+mb_internal_encoding(Strings::ENCODING);
 
 class Azura {
-    const VERSION = '0.3.0';
+    /**
+     * @var string Version number
+     */
+    const VERSION = '0.4.0';
 
-    private string $directory;
+    private readonly string $directory;
 
-    private string $extension;
+    private readonly string $extension;
 
+    /**
+     * @var Strings String manipulation helper
+     */
+    public readonly Strings $strings;
+
+    /**
+     * @param string $directory Base directory
+     * @param string $extension Default extensions
+     */
     function __construct(string $directory, string $extension = null)
     {
         $this->setDirectory($directory);
         $this->setExtension($extension ?? 'phtml');
+
+        $this->strings = new Strings;
     }
 
+    /**
+     * @param string $name Name of template
+     * @param mixed $data Optional data
+     * @return Template A new template
+     */
     public function template(string $name, mixed $data = null): Template
     {
         return new Template($this, $this->getFile($name), $data);
@@ -26,7 +45,7 @@ class Azura {
 
     private function getFile(string $name): string
     {
-        if (mb_strlen($name, 'utf-8') === 0) {
+        if (mb_strlen($name, Strings::ENCODING) === 0) {
             throw new LogicException("");
         }
 
@@ -54,7 +73,7 @@ class Azura {
 
     private function setExtension(string $extension): void
     {
-        if (mb_strlen($extension, 'utf-8') === 0) {
+        if (mb_strlen($extension, Strings::ENCODING) === 0) {
             throw new LogicException("");
         }
 
