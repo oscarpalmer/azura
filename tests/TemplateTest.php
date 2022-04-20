@@ -30,6 +30,13 @@ class TemplateTest extends TestCase {
         $this->assertEquals((string) $template, $this->simple_output);
     }
 
+    public function testInclude(): void
+    {
+        $template = (new Azura($this->directory))->template('partial_base');
+
+        $this->assertEquals(trim((string) $template), 'Hello, world!');
+    }
+
     public function testRender(): void
     {
         $template = (new Azura($this->directory))->template('simple');

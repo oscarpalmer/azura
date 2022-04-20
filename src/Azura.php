@@ -10,7 +10,7 @@ class Azura {
     /**
      * @var string Version number
      */
-    const VERSION = '0.4.0';
+    const VERSION = '0.5.0';
 
     private readonly string $directory;
 
@@ -34,9 +34,11 @@ class Azura {
     }
 
     /**
+     * Include (and render) a template
+     *
      * @param string $name Name of template
-     * @param mixed $data Optional data
-     * @return Template A new template
+     * @param mixed $data Optional data object
+     * @return Template Template
      */
     public function template(string $name, mixed $data = null): Template
     {

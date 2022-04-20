@@ -7,11 +7,13 @@ use stdClass;
 mb_internal_encoding('utf-8');
 
 class Template {
-    public readonly Azura $azura;
+    private readonly Azura $azura;
 
-    public readonly mixed $data;
+    private readonly mixed $data;
 
-    public readonly string $file;
+    private readonly string $file;
+
+    public readonly Strings $strings;
 
     /**
      * @param Azura $Azura Azura
@@ -23,6 +25,7 @@ class Template {
         $this->azura = $azura;
         $this->data = $data ?? new stdClass;
         $this->file = $file;
+        $this->strings = $azura->strings;
     }
 
     /**
@@ -43,6 +46,18 @@ class Template {
     public function render(): void
     {
         echo($this->renderFile());
+    }
+
+    /**
+     * Include (and render) a template
+     *
+     * @param string $name Name of template
+     * @param mixed $data Optional data object
+     * @return Template Template
+     */
+    protected function include(string $name, mixed $data = null): Template
+    {
+        return $this->azura->template($name, $data ?? $this->data);
     }
 
     private function renderFile(): string
