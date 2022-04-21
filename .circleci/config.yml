@@ -8,7 +8,6 @@ jobs:
     steps:
       - checkout
       - run: sudo apt update
-      - run: sudo docker-php-ext-install zip
       - run: composer install -n --prefer-dist
       - run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover coverage.xml
       - codecov/upload:
