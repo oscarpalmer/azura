@@ -26,9 +26,9 @@ class Azura {
     /**
      * @param Configuration $configuration Configuration
      */
-    function __construct(Configuration $configuration = new Configuration)
+    function __construct(Configuration $configuration = null)
     {
-        $this->configuration = $configuration;
+        $this->configuration = $configuration ?? new Configuration;
 
         $this->validateDirectory();
         $this->validateAndSetExtension();
