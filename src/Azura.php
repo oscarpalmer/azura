@@ -3,34 +3,37 @@
 namespace oscarpalmer\Azura;
 
 use LogicException;
+use oscarpalmer\Azura\Templates\Template;
 
-mb_internal_encoding(Strings::ENCODING);
+mb_internal_encoding('UTF-8');
 
 class Azura {
     /**
      * @var string Version number
      */
-    const VERSION = '0.5.0';
-
-    private readonly string $directory;
-
-    private readonly string $extension;
+    const VERSION = '0.6.0';
 
     /**
-     * @var Strings String manipulation helper
+     * @var Configuration Configuration options
      */
-    public readonly Strings $strings;
+    public readonly Configuration $configuration;
 
     /**
-     * @param string $directory Base directory
-     * @param string $extension Default extensions
+     * @var Filters Filters for data
      */
-    function __construct(string $directory, string $extension = null)
+    public readonly Filters $filters;
+
+    /**
+     * @param Configuration $configuration Configuration
+     */
+    function __construct(Configuration $configuration = new Configuration)
     {
-        $this->setDirectory($directory);
-        $this->setExtension($extension ?? 'phtml');
+        $this->configuration = $configuration;
 
-        $this->strings = new Strings;
+        $this->validateDirectory();
+        $this->validateAndSetExtension();
+
+        $this->filters = new Filters($this);
     }
 
     /**
@@ -42,40 +45,21 @@ class Azura {
      */
     public function template(string $name, mixed $data = null): Template
     {
-        return new Template($this, $this->getFile($name), $data);
+        return new Template($this, $name, $data);
     }
 
-    private function getFile(string $name): string
+    private function validateDirectory(): void
     {
-        if (mb_strlen($name, Strings::ENCODING) === 0) {
+        if (!is_dir($this->configuration->directory)) {
             throw new LogicException("");
         }
-
-        $extension = str_contains($name, '.')
-            ? ''
-            : $this->extension;
-
-        $filename = "{$this->directory}/{$name}{$extension}";
-
-        if (!is_file($filename)) {
-            throw new LogicException("");
-        }
-
-        return $filename;
     }
 
-    private function setDirectory(string $directory): void
+    private function validateAndSetExtension(): void
     {
-        if (!is_dir($directory)) {
-            throw new LogicException("");
-        }
+        $extension = $this->configuration->extension;
 
-        $this->directory = $directory;
-    }
-
-    private function setExtension(string $extension): void
-    {
-        if (mb_strlen($extension, Strings::ENCODING) === 0) {
+        if (mb_strlen($extension, $this->configuration->encoding) === 0) {
             throw new LogicException("");
         }
 
@@ -83,6 +67,6 @@ class Azura {
             ? ltrim($extension, '.')
             : $extension;
 
-        $this->extension = ".{$extension}";
+        $this->configuration->extension = ".{$extension}";
     }
 }

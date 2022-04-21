@@ -5,18 +5,21 @@ namespace oscarpalmer\Azura\Test;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use oscarpalmer\Azura\Azura;
+use oscarpalmer\Azura\Configuration;
 
-mb_internal_encoding('utf-8');
+mb_internal_encoding('UTF-8');
 
 class AzuraTest extends TestCase {
     public function setUp(): void
     {
-        $this->directory = dirname(__FILE__) . '/templates';
+        $this->configuration = new Configuration;
+
+        $this->configuration->directory = dirname(__FILE__) . '/templates';
     }
 
     public function testConstructor(): void
     {
-        $azura = new Azura($this->directory);
+        $azura = new Azura($this->configuration);
 
         $this->assertNotNull($azura);
         $this->assertInstanceOf('\oscarpalmer\Azura\Azura', $azura);
@@ -24,7 +27,7 @@ class AzuraTest extends TestCase {
 
     public function testGetFile(): void
     {
-        $azura = new Azura($this->directory, 'phtml');
+        $azura = new Azura($this->configuration);
 
         try {
             $azura->template('');
@@ -42,7 +45,11 @@ class AzuraTest extends TestCase {
     public function testSetDirectory(): void
     {
         try {
-            $azura = new Azura('');
+            $configuration = new Configuration;
+
+            $configuration->directory = '';
+
+            $azura = new Azura($configuration);
         } catch (Exception $exception) {
             $this->assertInstanceOf('LogicException', $exception);
         }
@@ -51,26 +58,38 @@ class AzuraTest extends TestCase {
     public function testSetExtension(): void
     {
         try {
-            $azura = new Azura($this->directory, '');
+            $configuration = new Configuration;
+
+            $configuration->extension = '';
+
+            $azura = new Azura($configuration);
         } catch (Exception $exception) {
             $this->assertInstanceOf('LogicException', $exception);
         }
 
         try {
-            $azura = new Azura($this->directory, 'phtml');
+            $configuration = new Configuration;
+
+            $configuration->extension = '...phtml';
+
+            $azura = new Azura($configuration);
         } catch (Exception $exception) {
             $this->assertInstanceOf('LogicException', $exception);
         }
 
         try {
-            $azura = new Azura($this->directory, '.phtml');
+            $configuration = new Configuration;
+
+            $configuration->extension = 'phtml';
+
+            $azura = new Azura($configuration);
         } catch (Exception $exception) {
             $this->assertInstanceOf('LogicException', $exception);
         }
     }
 
     public function testTemplate(): void {
-        $azura = new Azura($this->directory);
+        $azura = new Azura($this->configuration);
 
         try {
             $template = $azura->template('not_a_template');
@@ -80,7 +99,7 @@ class AzuraTest extends TestCase {
 
         $template = $azura->template('simple');
 
-        $this->assertInstanceOf('oscarpalmer\Azura\Template', $template);
+        $this->assertInstanceOf('oscarpalmer\Azura\Templates\Template', $template);
     }
 
     public function testVersion(): void
