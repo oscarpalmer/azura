@@ -21,7 +21,7 @@
   "license": "MIT",
   "name": "oscarpalmer/azura",
   "require": {
-    "php": ">=8.0"
+    "php": ">=8.1"
   },
   "require-dev": {
     "phpunit/php-code-coverage": ">=9.2",

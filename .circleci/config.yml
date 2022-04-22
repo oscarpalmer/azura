@@ -12,4 +12,3 @@ jobs:
       - run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover coverage.xml
       - codecov/upload:
           file: coverage.xml
-          xtra_args: -C $CIRCLE_SHA1
