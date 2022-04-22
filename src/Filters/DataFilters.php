@@ -1,8 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace oscarpalmer\Azura\Traits;
+declare(strict_types=1);
 
-trait DataFiltersTrait {
+namespace oscarpalmer\Azura\Filters;
+
+trait DataFilters
+{
     /**
      * Convert a value to JSON
      *

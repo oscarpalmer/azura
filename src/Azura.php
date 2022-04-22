@@ -1,17 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace oscarpalmer\Azura;
 
 use LogicException;
+use oscarpalmer\Azura\Filters\Filter;
 use oscarpalmer\Azura\Templates\Template;
 
 mb_internal_encoding('UTF-8');
 
-class Azura {
+class Azura
+{
     /**
      * @var string Version number
      */
-    const VERSION = '0.6.0';
+    public const VERSION = '0.7.0';
 
     /**
      * @var Configuration Configuration options
@@ -19,21 +23,21 @@ class Azura {
     public readonly Configuration $configuration;
 
     /**
-     * @var Filters Filters for data
+     * @var Filter Filters for data
      */
-    public readonly Filters $filters;
+    public readonly Filter $filters;
 
     /**
      * @param Configuration $configuration Configuration
      */
-    function __construct(Configuration $configuration = null)
+    public function __construct(Configuration $configuration = null)
     {
-        $this->configuration = $configuration ?? new Configuration;
+        $this->configuration = $configuration ?? new Configuration();
 
         $this->validateDirectory();
         $this->validateAndSetExtension();
 
-        $this->filters = new Filters($this);
+        $this->filters = new Filter($this);
     }
 
     /**

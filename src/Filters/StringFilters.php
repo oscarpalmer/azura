@@ -1,10 +1,13 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace oscarpalmer\Azura\Traits;
+declare(strict_types=1);
+
+namespace oscarpalmer\Azura\Filters;
 
 mb_internal_encoding('UTF-8');
 
-trait StringFiltersTrait {
+trait StringFilters
+{
     /**
      * Capitalize string
      *

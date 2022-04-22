@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace oscarpalmer\Azura\Templates;
 
@@ -6,7 +8,8 @@ use oscarpalmer\Azura\Azura;
 
 mb_internal_encoding('UTF-8');
 
-class Layout extends AbstractTemplate {
+class Layout extends Template
+{
     /**
      * @var string Content to render
      */
@@ -18,7 +21,7 @@ class Layout extends AbstractTemplate {
      * @param string $content Content
      * @param mixed $data Data object
      */
-    function __construct(Azura $azura, string $name, string $content, mixed $data)
+    public function __construct(Azura $azura, string $name, string $content, mixed $data)
     {
         $this->initialize($azura, $name, $data);
 
