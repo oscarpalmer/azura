@@ -4,11 +4,89 @@ declare(strict_types=1);
 
 namespace oscarpalmer\Azura;
 
-class Configuration
+use LogicException;
+
+final class Configuration
 {
-    public string $directory = '.';
+	/**
+	 * @var array<string>
+	 */
+	private array $values = [
+		'directory' => '.',
+		'encoding' => 'utf-8',
+		'extension' => 'phtml',
+	];
 
-    public string $encoding = 'UTF-8';
+	/**
+	 * @param array<string> $configuration
+	 */
+	public function __construct(array $configuration = [])
+	{
+		$this->values['encoding'] = $this->getValidEncoding($configuration['encoding'] ?? $this->values['encoding']);
 
-    public string $extension = 'phtml';
+		$this->values['directory'] = $this->getValidDirectory($configuration['directory'] ?? $this->values['directory']);
+		$this->values['extension'] = $this->getValidExtension($configuration['extension'] ?? $this->values['extension']);
+	}
+
+	/**
+	 * Get directory for template files
+	 */
+	public function getDirectory(): string
+	{
+		return $this->values['directory'];
+	}
+
+	/**
+	 * Get encoding for output
+	 */
+	public function getEncoding(): string
+	{
+		return $this->values['encoding'];
+	}
+
+	/**
+	 * Get extension for templates
+	 */
+	public function getExtension(): string
+	{
+		return $this->values['extension'];
+	}
+
+	private function getValidDirectory(string $directory): string
+	{
+		if (! is_dir($directory)) {
+			throw new LogicException('');
+		}
+
+		return $directory;
+	}
+
+	private function getValidEncoding(string $encoding): string
+	{
+		$encodings = mb_list_encodings();
+		$normalized = mb_strtolower($encoding, 'UTF-8');
+
+		foreach ($encodings as $encoding) {
+			if (mb_strtolower($encoding, 'utf-8') === $normalized) {
+				return $encoding;
+			}
+		}
+
+		throw new LogicException('');
+	}
+
+	private function getValidExtension(string $extension): string
+	{
+		if (mb_strlen($extension, $this->getEncoding()) === 0) {
+			throw new LogicException('');
+		}
+
+		if (mb_substr($extension, 0, 1) !== '.') {
+			return $extension;
+		}
+
+		$extension = ltrim($extension, '.');
+
+		return ".{$extension}";
+	}
 }

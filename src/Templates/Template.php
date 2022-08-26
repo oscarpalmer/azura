@@ -5,125 +5,117 @@ declare(strict_types=1);
 namespace oscarpalmer\Azura\Templates;
 
 use LogicException;
-use stdClass;
 use oscarpalmer\Azura\Azura;
 use oscarpalmer\Azura\Filters\Filter;
-
-mb_internal_encoding('UTF-8');
+use stdClass;
 
 class Template
 {
-    protected readonly Azura $azura;
+	protected Azura $azura;
 
-    protected readonly mixed $data;
+	protected mixed $data;
 
-    protected readonly string $file;
+	protected mixed $file;
 
-    protected mixed $layout_data = null;
+	protected mixed $layoutData = null;
 
-    protected string|null $layout_name = null;
+	protected string|null $layoutName = null;
 
-    /**
-     * @var Filter Filters for data
-     */
-    public readonly Filter $filters;
+	protected string $name;
 
-    /**
-     * @param Azura $Azura Azura
-     * @param string $name Template name
-     * @param mixed $data Optional data object
-     */
-    public function __construct(Azura $azura, string $file, mixed $data = null)
-    {
-        $this->initialize($azura, $file, $data);
-    }
+	/**
+	 * @param Azura $azura Azura
+	 * @param string $name Template name
+	 * @param mixed $data Optional data object
+	 */
+	public function __construct(Azura $azura, string $name, mixed $data = null)
+	{
+		$this->azura = $azura;
+		$this->data = $data ?? new stdClass();
 
-    /**
-     * Define a layout for this template
-     *
-     * @param string $name Name of layout
-     * @param mixed $data Optional data object
-     */
-    public function layout(string $name, mixed $data = null): void
-    {
-        $this->layout_data = $data;
-        $this->layout_name = $name;
-    }
+		$this->file = $this->getFile($azura, $name);
+	}
 
-    /**
-     * Render template
-     *
-     * @return string Rendered template
-     */
-    public function __toString(): string
-    {
-        return $this->renderFile();
-    }
+	/**
+	 * Render template
+	 */
+	public function __toString(): string
+	{
+		return $this->renderFile();
+	}
 
-    /**
-     * Render template
-     *
-     * @return string Rendered template
-     */
-    public function render(): void
-    {
-        echo($this->renderFile());
-    }
+	/**
+	 * Get filter helper
+	 */
+	public function getFilter(): Filter
+	{
+		return $this->azura->getFilter();
+	}
 
-    /**
-     * Include (and render) a template
-     *
-     * @param string $name Name of template
-     * @param mixed $data Optional data object
-     * @return Template Template
-     */
-    public function include(string $name, mixed $data = null): Template
-    {
-        return $this->azura->template($name, $data ?? $this->data);
-    }
+	/**
+	 * Define a layout for this template
+	 *
+	 * @param string $name Name of layout
+	 * @param mixed $data Optional data object
+	 */
+	public function layout(string $name, mixed $data = null): void
+	{
+		$this->layoutData = $data;
+		$this->layoutName = $name;
+	}
 
-    protected function initialize(Azura $azura, string $name, mixed $data): void
-    {
-        $this->file = $this->getFile($azura, $name);
+	/**
+	 * Render template
+	 */
+	public function render(): void
+	{
+		echo $this->renderFile();
+	}
 
-        $this->azura = $azura;
-        $this->data = $data ?? new stdClass();
-        $this->filters = $azura->filters;
-    }
+	/**
+	 * Create a template
+	 *
+	 * @param string $name Name of template file
+	 * @param mixed $data Optional data object
+	 */
+	public function include(string $name, mixed $data = null): Template
+	{
+		return $this->azura->template($name, $data ?? $this->data);
+	}
 
-    private function getFile(Azura $azura, string $name): string
-    {
-        if (mb_strlen($name, $azura->configuration->encoding) === 0) {
-            throw new LogicException("");
-        }
+	private function getFile(Azura $azura, string $name): string
+	{
+		if (mb_strlen($name, $azura->getConfiguration()->getEncoding()) === 0) {
+			throw new LogicException('');
+		}
 
-        $extension = str_contains($name, '.')
-            ? ''
-            : $azura->configuration->extension;
+		$extension = str_contains($name, '.')
+			? ''
+			: $azura->getConfiguration()->getExtension();
 
-        $filename = "{$azura->configuration->directory}/{$name}{$extension}";
+		$filename = "{$azura->getConfiguration()->getDirectory()}/{$name}.{$extension}";
 
-        if (!is_file($filename)) {
-            throw new LogicException("");
-        }
+		if (! is_file($filename)) {
+			throw new LogicException('');
+		}
 
-        return $filename;
-    }
+		return $filename;
+	}
 
-    private function renderFile(): string
-    {
-        ob_start();
+	private function renderFile(): string
+	{
+		ob_start();
 
-        include($this->file);
+		include $this->file;
 
-        $content = ob_get_clean();
+		$content = ob_get_clean();
 
-        if (is_null($this->layout_name)) {
-            return $content;
-        }
+		if (is_null($this->layoutName)) {
+			return (string) $content;
+		}
 
-        $layout = new Layout($this->azura, $this->layout_name, $content, $this->layout_data ?? $this->data);
+		$layout = new Layout($this->azura, $this->layoutName, (string) $content, $this->layoutData ?? $this->data);
 
-        return (string) $layout;
-    }
+		return (string) $layout;
+	}
 }

@@ -6,21 +6,24 @@ namespace oscarpalmer\Azura\Filters;
 
 trait DataFilters
 {
-    /**
-     * Convert a value to JSON
-     *
-     * @param mixed $value Original value
-     * @param bool $format Pretty print JSON?
-     * @return string JSON representation for value
-     */
-    public function json(mixed $value, bool $format = false): string
-    {
-        $options = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+	/**
+	 * Convert a value to JSON
+	 *
+	 * @param mixed $value Original value
+	 * @param bool $format Pretty print JSON?
+	 */
+	public function json(mixed $value, bool $format = false): string
+	{
+		$options = JSON_INVALID_UTF8_SUBSTITUTE
+			| JSON_PRESERVE_ZERO_FRACTION
+			| JSON_THROW_ON_ERROR
+			| JSON_UNESCAPED_SLASHES
+			| JSON_UNESCAPED_UNICODE;
 
-        if ($format === true) {
-            $options |= JSON_PRETTY_PRINT;
-        }
+		if ($format === true) {
+			$options |= JSON_PRETTY_PRINT;
+		}
 
-        return json_encode($value, $options);
-    }
+		return json_encode($value, $options);
+	}
 }

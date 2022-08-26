@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace oscarpalmer\Azura\Test;
 
@@ -7,103 +9,65 @@ use PHPUnit\Framework\TestCase;
 use oscarpalmer\Azura\Azura;
 use oscarpalmer\Azura\Configuration;
 
-mb_internal_encoding('UTF-8');
+final class AzuraTest extends TestCase {
+	public Configuration $configuration;
 
-class AzuraTest extends TestCase {
-    public function setUp(): void
-    {
-        $this->configuration = new Configuration;
+	public function setUp(): void
+	{
+		$this->configuration = new Configuration([
+			'directory' => dirname(__FILE__) . '/static',
+		]);
+	}
 
-        $this->configuration->directory = dirname(__FILE__) . '/templates';
-    }
+	public function testConstructor(): void
+	{
+		$azura = new Azura($this->configuration);
 
-    public function testConstructor(): void
-    {
-        $azura = new Azura($this->configuration);
+		$this->assertNotNull($azura);
+		$this->assertInstanceOf('\oscarpalmer\Azura\Azura', $azura);
+	}
 
-        $this->assertNotNull($azura);
-        $this->assertInstanceOf('\oscarpalmer\Azura\Azura', $azura);
-    }
+	public function testGetObjects(): void
+	{
+		$azura = new Azura($this->configuration);
 
-    public function testGetFile(): void
-    {
-        $azura = new Azura($this->configuration);
+		$this->assertInstanceOf('oscarpalmer\Azura\Configuration', $azura->getConfiguration());
+		$this->assertInstanceOf('oscarpalmer\Azura\Filters\Filter', $azura->getFilter());
+	}
 
-        try {
-            $azura->template('');
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
+	public function testGetFile(): void
+	{
+		$azura = new Azura($this->configuration);
 
-        try {
-            $azura->template('simple.phtml');
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
-    }
+		try {
+			$azura->template('');
+		} catch (Exception $exception) {
+			$this->assertInstanceOf('LogicException', $exception);
+		}
 
-    public function testSetDirectory(): void
-    {
-        try {
-            $configuration = new Configuration;
+		try {
+			$azura->template('simple.phtml');
+		} catch (Exception $exception) {
+			$this->assertInstanceOf('LogicException', $exception);
+		}
+	}
 
-            $configuration->directory = '';
+	public function testTemplate(): void {
+		$azura = new Azura($this->configuration);
 
-            $azura = new Azura($configuration);
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
-    }
+		try {
+			$template = $azura->template('not_a_template');
+		} catch (Exception $exception) {
+			$this->assertInstanceOf('\LogicException', $exception);
+		}
 
-    public function testSetExtension(): void
-    {
-        try {
-            $configuration = new Configuration;
+		$template = $azura->template('simple');
 
-            $configuration->extension = '';
+		$this->assertInstanceOf('oscarpalmer\Azura\Templates\Template', $template);
+	}
 
-            $azura = new Azura($configuration);
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
-
-        try {
-            $configuration = new Configuration;
-
-            $configuration->extension = '...phtml';
-
-            $azura = new Azura($configuration);
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
-
-        try {
-            $configuration = new Configuration;
-
-            $configuration->extension = 'phtml';
-
-            $azura = new Azura($configuration);
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('LogicException', $exception);
-        }
-    }
-
-    public function testTemplate(): void {
-        $azura = new Azura($this->configuration);
-
-        try {
-            $template = $azura->template('not_a_template');
-        } catch (Exception $exception) {
-            $this->assertInstanceOf('\LogicException', $exception);
-        }
-
-        $template = $azura->template('simple');
-
-        $this->assertInstanceOf('oscarpalmer\Azura\Templates\Template', $template);
-    }
-
-    public function testVersion(): void
-    {
-        $this->assertIsString(Azura::VERSION);
-    }
+	public function testVersion(): void
+	{
+		$this->assertIsString(Azura::VERSION);
+	}
 }

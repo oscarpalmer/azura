@@ -6,14 +6,12 @@ namespace oscarpalmer\Azura\Filters;
 
 use oscarpalmer\Azura\Azura;
 
-mb_internal_encoding('UTF-8');
-
-class Filter
+final class Filter
 {
-    use DataFilters;
-    use StringFilters;
+	use DataFilters;
+	use StringFilters;
 
-    public function __construct(private readonly Azura $azura)
-    {
-    }
+	public function __construct(private readonly Azura $azura)
+	{
+	}
 }
