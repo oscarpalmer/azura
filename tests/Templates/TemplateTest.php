@@ -49,7 +49,7 @@ final class TemplateTest extends TestCase {
 	{
 		$template = (new Azura($this->configuration))->template('layout_inner');
 
-		$this->assertEquals(trim((string) $template), '<h2>TITLE</h2>
+		$this->assertEquals(trim((string) $template), '<h2>Title</h2>
 <div><p>Hello world</p></div>');
 	}
 

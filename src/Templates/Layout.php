@@ -14,9 +14,9 @@ final class Layout extends Template
 	 * @param Azura $azura Azura
 	 * @param string $name Layout name
 	 * @param string $content Content
-	 * @param mixed $data Data object
+	 * @param $data Data object
 	 */
-	public function __construct(Azura $azura, string $name, string $content, mixed $data)
+	public function __construct(Azura $azura, string $name, string $content, $data)
 	{
 		parent::__construct($azura, $name, $data);
 

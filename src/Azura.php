@@ -45,9 +45,9 @@ final class Azura
 	 * Create a template
 	 *
 	 * @param string $name Name of template file
-	 * @param mixed $data Optional data object
+	 * @param $data Optional data object
 	 */
-	public function template(string $name, mixed $data = null): Template
+	public function template(string $name, $data = null): Template
 	{
 		return new Template($this, $name, $data);
 	}

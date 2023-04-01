@@ -17,13 +17,6 @@ final class FiltersTest extends TestCase
 		$this->filter = new Filter(new Azura);
 	}
 
-	public function testCapitalize(): void
-	{
-		$this->assertSame('Hello world', $this->filter->capitalize('hello world'));
-		$this->assertSame('H', $this->filter->capitalize('h'));
-		$this->assertSame('', $this->filter->capitalize(''));
-	}
-
 	public function testEscape(): void
 	{
 		$this->assertSame('&lt;p&gt;An escaped tag&lt;/p&gt;', $this->filter->escape('<p>An escaped tag</p>'));
@@ -54,18 +47,6 @@ final class FiltersTest extends TestCase
 		$this->assertSame(5, $this->filter->length('Azura'));
 	}
 
-	public function testLower(): void
-	{
-		$this->assertSame('azura', $this->filter->lower('Azura'));
-	}
-
-	public function testTitle(): void
-	{
-		$this->assertSame('Hello World', $this->filter->title('hello world'));
-		$this->assertSame('H', $this->filter->title('h'));
-		$this->assertSame('', $this->filter->title(''));
-	}
-
 	public function testTruncate(): void
 	{
 		$azura = 'Azura, the Queen of Dawn and Dusk';
@@ -74,10 +55,5 @@ final class FiltersTest extends TestCase
 		$this->assertSame('Azura, the Que&hellip;', $this->filter->truncate($azura, 15));
 		$this->assertSame('Azura, the Quee', $this->filter->truncate($azura, 15, false));
 		$this->assertSame('Azura, the Que___', $this->filter->truncate($azura, 15, '___'));
-	}
-
-	public function testUpper(): void
-	{
-		$this->assertSame('AZURA', $this->filter->upper('Azura'));
 	}
 }

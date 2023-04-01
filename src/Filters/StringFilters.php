@@ -7,25 +7,6 @@ namespace oscarpalmer\Azura\Filters;
 trait StringFilters
 {
 	/**
-	 * Capitalize string
-	 *
-	 * @param string $value String to capitalize
-	 */
-	public function capitalize(string $value): string
-	{
-		$length = $this->length($value);
-
-		if ($length < 2) {
-			return $this->upper($value);
-		}
-
-		$first = mb_substr($value, 0, 1, $this->azura->getConfiguration()->getEncoding());
-		$rest = mb_substr($value, 1, $length, $this->azura->getConfiguration()->getEncoding());
-
-		return $this->upper($first) . $rest;
-	}
-
-	/**
 	 * Escape string by converting special characters
 	 *
 	 * @param string $value Original string
@@ -43,30 +24,6 @@ trait StringFilters
 	public function length(string $value): int
 	{
 		return mb_strlen($value, $this->azura->getConfiguration()->getEncoding());
-	}
-
-	/**
-	 * Convert string to its lowercase variant
-	 *
-	 * @param string $value Original value
-	 */
-	public function lower(string $value): string
-	{
-		return mb_strtolower($value, $this->azura->getConfiguration()->getEncoding());
-	}
-
-	/**
-	 * Convert string to its title-cased variant
-	 *
-	 * @param string $value String to convert
-	 */
-	public function title(string $value): string
-	{
-		if ($this->length($value) < 2) {
-			return $this->upper($value);
-		}
-
-		return mb_convert_case($value, \MB_CASE_TITLE, $this->azura->getConfiguration()->getEncoding());
 	}
 
 	/**
@@ -91,15 +48,5 @@ trait StringFilters
 			: '&hellip;';
 
 		return mb_substr($value, 0, $length - 1, $this->azura->getConfiguration()->getEncoding()) . $ellipsis;
-	}
-
-	/**
-	 * Convert string to its uppercase variant
-	 *
-	 * @param string $value Original value
-	 */
-	public function upper(string $value): string
-	{
-		return mb_strtoupper($value, $this->azura->getConfiguration()->getEncoding());
 	}
 }
