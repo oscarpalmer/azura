@@ -9,10 +9,10 @@ trait DataFilters
 	/**
 	 * Convert a value to JSON
 	 *
-	 * @param $value Original value
+	 * @param mixed $value Original value
 	 * @param bool $format Pretty print JSON?
 	 */
-	public function json($value, bool $format = false): string
+	public function json(mixed $value, bool $format = false): string
 	{
 		$options = JSON_INVALID_UTF8_SUBSTITUTE
 			| JSON_PRESERVE_ZERO_FRACTION

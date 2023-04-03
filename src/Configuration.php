@@ -55,7 +55,7 @@ final class Configuration
 	private function getValidDirectory(string $directory): string
 	{
 		if (! is_dir($directory)) {
-			throw new LogicException('');
+			throw new LogicException('The provided directory does not exist');
 		}
 
 		return $directory;
@@ -64,7 +64,7 @@ final class Configuration
 	private function getValidEncoding(string $encoding): string
 	{
 		$encodings = mb_list_encodings();
-		$normalized = mb_strtolower($encoding, 'UTF-8');
+		$normalized = mb_strtolower($encoding, 'utf-8');
 
 		foreach ($encodings as $encoding) {
 			if (mb_strtolower($encoding, 'utf-8') === $normalized) {
@@ -72,13 +72,13 @@ final class Configuration
 			}
 		}
 
-		throw new LogicException('');
+		throw new LogicException('The provided encoding does not exist');
 	}
 
 	private function getValidExtension(string $extension): string
 	{
 		if (mb_strlen($extension, $this->getEncoding()) === 0) {
-			throw new LogicException('');
+			throw new LogicException('The provided extension may not be empty');
 		}
 
 		if (mb_substr($extension, 0, 1) !== '.') {

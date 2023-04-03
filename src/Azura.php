@@ -9,7 +9,7 @@ use oscarpalmer\Azura\Templates\Template;
 
 final class Azura
 {
-	public const VERSION = '0.8.0';
+	public const VERSION = '0.9.0';
 
 	private Configuration $configuration;
 
@@ -45,9 +45,9 @@ final class Azura
 	 * Create a template
 	 *
 	 * @param string $name Name of template file
-	 * @param $data Optional data object
+	 * @param mixed $data Optional data object
 	 */
-	public function template(string $name, $data = null): Template
+	public function template(string $name, mixed $data = null): Template
 	{
 		return new Template($this, $name, $data);
 	}

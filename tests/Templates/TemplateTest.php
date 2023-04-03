@@ -38,6 +38,13 @@ final class TemplateTest extends TestCase {
 		$this->assertEquals((string) $template, $this->simpleOutput);
 	}
 
+	public function testFilter(): void
+	{
+		$template = (new Azura($this->configuration))->template('simple');
+
+		$this->assertInstanceOf('oscarpalmer\Azura\Filters\Filter', $template->getFilter());
+	}
+
 	public function testInclude(): void
 	{
 		$template = (new Azura($this->configuration))->template('partial_base');

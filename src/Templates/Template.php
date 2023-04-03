@@ -13,25 +13,27 @@ class Template
 {
 	protected Azura $azura;
 
-	protected $data;
+	protected mixed $data;
 
-	protected $file;
+	protected string $file;
 
-	protected $layoutData = null;
-
-	protected string|null $layoutName = null;
+	protected stdClass $layout;
 
 	protected string $name;
 
 	/**
 	 * @param Azura $azura Azura
 	 * @param string $name Template name
-	 * @param $data Optional data object
+	 * @param mixed $data Optional data object
 	 */
-	public function __construct(Azura $azura, string $name, $data = null)
+	public function __construct(Azura $azura, string $name, mixed $data = null)
 	{
 		$this->azura = $azura;
 		$this->data = $data ?? new stdClass();
+		$this->layout = new stdClass();
+
+		$this->layout->data = null;
+		$this->layout->name = null;
 
 		$this->file = $this->getFile($azura, $name);
 	}
@@ -56,12 +58,12 @@ class Template
 	 * Define a layout for this template
 	 *
 	 * @param string $name Name of layout
-	 * @param $data Optional data object
+	 * @param mixed $data Optional data object
 	 */
-	public function layout(string $name, $data = null): void
+	public function layout(string $name, mixed $data = null): void
 	{
-		$this->layoutData = $data;
-		$this->layoutName = $name;
+		$this->layout->data = $data;
+		$this->layout->name = $name;
 	}
 
 	/**
@@ -76,9 +78,9 @@ class Template
 	 * Create a template
 	 *
 	 * @param string $name Name of template file
-	 * @param $data Optional data object
+	 * @param mixed $data Optional data object
 	 */
-	public function include(string $name, $data = null): Template
+	public function include(string $name, mixed $data = null): Template
 	{
 		return $this->azura->template($name, $data ?? $this->data);
 	}
@@ -86,7 +88,7 @@ class Template
 	private function getFile(Azura $azura, string $name): string
 	{
 		if (mb_strlen($name, $azura->getConfiguration()->getEncoding()) === 0) {
-			throw new LogicException('');
+			throw new LogicException('A template name may not be empty');
 		}
 
 		$extension = str_contains($name, '.')
@@ -96,7 +98,7 @@ class Template
 		$filename = "{$azura->getConfiguration()->getDirectory()}/{$name}.{$extension}";
 
 		if (! is_file($filename)) {
-			throw new LogicException('');
+			throw new LogicException('The template file does not exist');
 		}
 
 		return $filename;
@@ -110,11 +112,11 @@ class Template
 
 		$content = ob_get_clean();
 
-		if (is_null($this->layoutName)) {
+		if (is_null($this->layout->name)) {
 			return (string) $content;
 		}
 
-		$layout = new Layout($this->azura, $this->layoutName, (string) $content, $this->layoutData ?? $this->data);
+		$layout = new Layout($this->azura, $this->layout->name, (string) $content, $this->layout->data ?? $this->data);
 
 		return (string) $layout;
 	}
